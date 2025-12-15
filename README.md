@@ -26,37 +26,6 @@ When using `BrazeActivityLifecycleCallbackListener`, Activities may not be garba
 4. Use the **Background/Foreground Test** to cycle app between background and foreground
 5. Check LeakCanary notification or use Android Studio Memory Profiler to take a heap dump
 
-## Expected Behavior
-
-Activities should be garbage collected after `onDestroy()` is called.
-
-## Actual Behavior
-
-Destroyed Activities may be retained in memory. Heap dump shows multiple instances of destroyed activities being held by:
-
-```
-Activity (mDestroyed = true)
-    |
-f$0 in Braze$$ExternalSyntheticLambda180
-    |
-e in q (Braze internal class)
-    |
-continuation in DispatchedContinuation
-    |
-item in LinkedBlockingQueue$Node
-    |
-next in LinkedBlockingQueue$Node (infinite chain)
-```
-
-## Workaround
-
-Disabling `BrazeActivityLifecycleCallbackListener` eliminates the leak:
-
-```kotlin
-// Disabled due to memory leak
-// registerActivityLifecycleCallbacks(BrazeActivityLifecycleCallbackListener(true, true))
-```
-
 ## App Features
 
 - **MainActivity, SecondActivity, ThirdActivity**: Activities with paging image galleries
