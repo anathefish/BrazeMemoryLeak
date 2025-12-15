@@ -32,6 +32,16 @@
             android:name=".ThirdActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".StressTestActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".BackgroundStressTestActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
     </application>
 
 </manifest>

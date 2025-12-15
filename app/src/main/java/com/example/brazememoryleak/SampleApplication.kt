@@ -37,15 +37,18 @@ class SampleApplication : Application() {
             )
         )
 
-        // Configure Braze (API key not needed for leak reproduction)
+        // Configure Braze
+        // API key and endpoint are set in res/values/braze.xml
         val brazeConfig = BrazeConfig.Builder()
-            .setDefaultNotificationChannelName("Sample")
-            .setDefaultNotificationChannelDescription("Sample notifications")
+            .setDefaultNotificationChannelName("Marketing Push")
+            .setDefaultNotificationChannelDescription("Marketing related push")
+            .setPushDeepLinkBackStackActivityEnabled(false)
+            .setHandlePushDeepLinksAutomatically(true)
             .build()
 
         Braze.configure(this, brazeConfig)
 
-        Log.d(TAG, "Braze SDK configured with version 40.0.2")
+        Log.d(TAG, "Braze SDK configured with version 40.1.0")
     }
 
     companion object {

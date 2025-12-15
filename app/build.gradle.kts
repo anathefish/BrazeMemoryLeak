@@ -29,11 +29,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
-    // Braze SDK - version with memory leak (matching Fishbrain 40.1.0)
+    // Braze SDK - version with memory leak
     implementation("com.braze:android-sdk-ui:40.1.0")
 
     // Network
