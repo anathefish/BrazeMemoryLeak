@@ -36,7 +36,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.brazememoryleak.api.PicsumImage
 
 data class NavigationAction(
@@ -192,6 +193,7 @@ private fun NavigationCard(actions: List<NavigationAction>) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun ImageCard(image: PicsumImage) {
     Card(
@@ -199,7 +201,7 @@ private fun ImageCard(image: PicsumImage) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column {
-            AsyncImage(
+            GlideImage(
                 model = image.getResizedUrl(600, 400),
                 contentDescription = "Photo by ${image.author}",
                 modifier = Modifier

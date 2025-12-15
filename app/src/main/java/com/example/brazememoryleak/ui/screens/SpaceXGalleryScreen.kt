@@ -36,7 +36,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.brazememoryleak.api.LaunchImage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,6 +187,7 @@ private fun SpaceXNavigationCard(actions: List<NavigationAction>) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun LaunchCard(launch: LaunchImage) {
     Card(
@@ -193,7 +195,7 @@ private fun LaunchCard(launch: LaunchImage) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column {
-            AsyncImage(
+            GlideImage(
                 model = launch.imageUrl,
                 contentDescription = "Photo from ${launch.missionName}",
                 modifier = Modifier
