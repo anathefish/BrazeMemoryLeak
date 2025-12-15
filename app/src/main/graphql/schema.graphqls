@@ -1,0 +1,17 @@
+type Query {
+  launches(limit: Int, offset: Int): [Launch]
+}
+
+type Launch {
+  id: ID
+  mission_name: String
+  launch_date_utc: String
+  details: String
+  links: LaunchLinks
+}
+
+type LaunchLinks {
+  flickr_images: [String]
+  mission_patch: String
+  mission_patch_small: String
+}
