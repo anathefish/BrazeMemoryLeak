@@ -1,28 +1,30 @@
 # Braze Memory Leak Sample
 
-This is a minimal sample app demonstrating a memory leak in `BrazeActivityLifecycleCallbackListener` (Braze SDK v40.0.2).
+This is a sample app to investigate a potential memory leak in `BrazeActivityLifecycleCallbackListener` (Braze SDK v40.1.0).
 
 ## Issue Summary
 
-When using `BrazeActivityLifecycleCallbackListener`, Activities are not garbage collected after being destroyed. The SDK's internal synthetic lambdas capture Activity references and queue them in a `LinkedBlockingQueue` that never drains.
+When using `BrazeActivityLifecycleCallbackListener`, Activities may not be garbage collected after being destroyed. The SDK's internal synthetic lambdas capture Activity references and queue them in a `LinkedBlockingQueue` that never drains.
 
 ## Environment
 
-- **Braze SDK Version**: 40.0.2 (leak present)
-- **Working Version**: 39.0.0 (no leak)
-- **Android Compile SDK**: 34
-- **Kotlin**: 1.9.20
+- **Braze SDK Version**: 40.1.0
+- **Android Compile SDK**: 35
+- **Android Target SDK**: 35
+- **Android Min SDK**: 29
+- **Kotlin**: 2.2.21
+- **Gradle**: 8.14.3
+- **AGP**: 8.13.1
 
 ## Steps to Reproduce
 
 1. Open project in Android Studio
 2. Run the app on a device or emulator
-3. Navigate between activities:
-   - Tap "Open Second Activity"
-   - Press back
-   - Repeat 10-20 times
-4. LeakCanary will automatically detect and report the leaks
-5. Alternatively, use Android Studio Memory Profiler to take a heap dump
+3. Use the **Stress Test** to rapidly cycle through activities:
+   - Navigate to Stress Test from any activity
+   - Run 20-100 cycles
+4. Use the **Background/Foreground Test** to cycle app between background and foreground
+5. Check LeakCanary notification or use Android Studio Memory Profiler to take a heap dump
 
 ## Expected Behavior
 
@@ -30,19 +32,19 @@ Activities should be garbage collected after `onDestroy()` is called.
 
 ## Actual Behavior
 
-Destroyed Activities are retained in memory. Heap dump shows multiple instances of destroyed activities being held by:
+Destroyed Activities may be retained in memory. Heap dump shows multiple instances of destroyed activities being held by:
 
 ```
 Activity (mDestroyed = true)
-    ↓
+    |
 f$0 in Braze$$ExternalSyntheticLambda180
-    ↓
+    |
 e in q (Braze internal class)
-    ↓
+    |
 continuation in DispatchedContinuation
-    ↓
+    |
 item in LinkedBlockingQueue$Node
-    ↓
+    |
 next in LinkedBlockingQueue$Node (infinite chain)
 ```
 
@@ -55,16 +57,11 @@ Disabling `BrazeActivityLifecycleCallbackListener` eliminates the leak:
 // registerActivityLifecycleCallbacks(BrazeActivityLifecycleCallbackListener(true, true))
 ```
 
-## To Test with SDK 39.0.0 (No Leak)
+## App Features
 
-Change the dependency in `app/build.gradle.kts`:
-
-```kotlin
-// Change from:
-implementation("com.braze:android-sdk-ui:40.0.2")
-
-// To:
-implementation("com.braze:android-sdk-ui:39.0.0")
-```
-
-Rebuild and repeat the reproduction steps - no leak will be detected.
+- **MainActivity, SecondActivity, ThirdActivity**: Activities with paging image galleries
+- **StressTestActivity**: Rapidly cycles through all activities to stress test memory
+- **BackgroundStressTestActivity**: Cycles app between background and foreground
+- **LeakCanary**: Automatically detects and reports memory leaks
+- **Hilt**: Dependency injection matching production app setup
+- **Paging 3**: Infinite scrolling with REST and GraphQL APIs
